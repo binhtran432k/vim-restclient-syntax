@@ -40,8 +40,8 @@ syn match httpProtocolVersion '\(HTTP\)/\(\d\+.\d\+\)' contained contains=httpPr
 
 syn region httpRequestBodyCurl start='^\s*\(curl\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpShell
 syn region httpRequestBodyJson start='\s*\(\[\|{[^{]\|{\_s\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpJson
-syn region httpRequestBodyXml start='^\s*\(<\S\)\@=' end='^\s*\(#\{3,}xml.\{-}\)\?\s*$' contains=@httpXml
-syn region httpRequestBodyGraphql start='\s*\(query\|mutation\)\@=' end='^\s*\(#\{3,}graphql.\{-}\)\?\s*$' contains=@httpGraphql
+syn region httpRequestBodyXml start='^\s*\(<\S\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpXml
+syn region httpRequestBodyGraphql start='\s*\(query\|mutation\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpGraphql
 " syn region httpRequestBodyGraphql start='\s*\(query\|mutation\)\@=' end='^{\s*$' contains=@httpGraphql
 
 
