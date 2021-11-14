@@ -20,15 +20,18 @@ syn case match
 
 " (( Request Line ))
 
-syn match httpRequestKeyword '\c^\(get\|post\|put\|delete\|patch\|head\|options\|connect\|trace\)' nextgroup=httpRequestConst contained
-syn match httpRequestConst '.\{-1,}\s' nextgroup=httpProtocolVersion contained
-syn match httpRequestLine '\c^\%(\(get\|post\|put\|delete\|patch\|head\|options\|connect\|trace\)\s\+\)\?\s*\(.\{-1,}\)\%(\s\+\(HTTP/\S\+\)\)\?$' contains=httpRequestKeyword
+syn match httpRequestKeyword '\c^\(get\|post\|put\|delete\|patch\|head\|options\|connect\|trace\)' nextgroup=httpRequestLanguage contained
+syn match httpRequestLanguage '.\{-1,}$' contains=httpUrl contained
+syn match httpRequestLanguage '.\{-1,}\s\+HTTP/\S\+$' contains=httpUrl,httpProtocolVersion contained
+syn match httpRequestLine '\c^\(.\{-1,}\)\%(\s\+\(HTTP/\S\+\)\)\?$' contains=httpRequestLanguage
+syn match httpRequestLine '\c^\%(\(get\|post\|put\|delete\|patch\|head\|options\|connect\|trace\)\s\+\)\(.\{-1,}\)\%(\s\+\(HTTP/\S\+\)\)\?$' contains=httpRequestKeyword
+syn match httpUrl '\(https\?\|ftp\)://\_S\+' contained display
 
 " (( Response Line ))
 
-syn match httpResponseConst '[1-5][0-9][0-9]' nextgroup=httpResponseString contained
+syn match httpResponseNumber '[1-5][0-9][0-9]' nextgroup=httpResponseString contained
 syn match httpResponseString '.*' contained
-syn match httpResponseLine '\c^\s*\(HTTP/\S\+\)\s\([1-5][0-9][0-9]\)\s\(.*\)$' contains=httpProtocolVersion,httpResponseConst
+syn match httpResponseLine '\c^\s*\(HTTP/\S\+\)\s\([1-5][0-9][0-9]\)\s\(.*\)$' contains=httpProtocolVersion,httpResponseNumber
 
 " (( Protocol ))
 
@@ -39,10 +42,10 @@ syn match httpProtocolVersion '\(HTTP\)/\(\d\+.\d\+\)' contained contains=httpPr
 " (( Request Body ))
 
 syn region httpRequestBodyCurl start='^\s*\(curl\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpShell
-syn region httpRequestBodyJson start='\s*\(\[\|{[^{]\|{\_s\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpJson
-syn region httpRequestBodyXml start='^\s*\(<\S\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpXml
-syn region httpRequestBodyGraphql start='\s*\(query\|mutation\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpGraphql
+syn region httpRequestBodyJson matchgroup=httpCommentLineSharp start='\s*\(\[\|{[^{]\|{\_s\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' transparent contains=@httpJson
+syn region httpRequestBodyXml matchgroup=httpCommentLineSharp start='^\s*\(<\S\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpXml
 " syn region httpRequestBodyGraphql start='\s*\(query\|mutation\)\@=' end='^{\s*$' contains=@httpGraphql
+syn region httpRequestBodyGraphql matchgroup=httpCommentLineSharp start='\s*\(query\|mutation\)\@=' end='^\s*\(#\{3,}.\{-}\)\?\s*$' contains=@httpGraphql
 
 
 " (( File variable ))
@@ -56,7 +59,7 @@ syn match httpFile '^\s*\(@\)\([^[:blank:]=]\+\)\s*=\s*\(.\{-}\)\s*$' contains=h
 " (( Query ))
 
 syn match httpQueryKeyword '\(?\|&\)' nextgroup=httpQueryVariable contained
-syn match httpQueryVariable '\([^[:blank:]=]\+\)' nextgroup=httpQueryEqual contained
+syn match httpQueryVariable '[^[:blank:]=]\+' nextgroup=httpQueryEqual contained
 syn match httpQueryEqual '=' nextgroup=httpQueryString contained
 syn match httpQueryString '.*$' contained
 syn match httpQuery '^\s*\(?\|&\)\([^[:blank:]=]\+\)=\(.*\)$' contains=httpQueryKeyword
@@ -70,13 +73,13 @@ syn match httpHeaders '^\([[:alnum:]_-]\+\)\s*\(:\)\s*\([^/].\{-}\)\s*$' contain
 
 " (( Comment ))
 
-syn match httpCommentLineName '\s@name\s[^[:blank:].]\+$' contains=httpCommentLineKeyword contained
-syn match httpCommentLineNote '\s@note\s*$' contains=httpCommentLineKeyword contained
+syn match httpCommentLineLabel '\s@name\s[^[:blank:].]\+$' contains=httpCommentLineKeyword,httpCommentLineString contained
+syn match httpCommentLineLabel '\s@note\s*$' contains=httpCommentLineKeyword contained
 syn match httpCommentLineString '\s[^[:blank:].]\+$' contained
 syn match httpCommentLineKeyword '@' contained
 
-syn match httpCommentLineSharp '^\s*#\{1,}.*$' display contains=httpCommentLineName,httpCommentLineNote
-syn match httpCommentLineDoubleSlash '^\s*/\{2,}.*$' display contains=httpCommentLineName,httpCommentLineNote
+syn match httpCommentLineSharp '^\s*#\{1,}.*$' display contains=httpCommentLineLabel
+syn match httpCommentLineDoubleSlash '^\s*/\{2,}.*$' display contains=httpCommentLineLabel
 
 
 hi link httpFileKeyword Keyword
@@ -90,15 +93,16 @@ hi link httpHeaderKeyword Delimiter
 hi link httpHeaderString String
 hi link httpCommentLineSharp Comment
 hi link httpCommentLineDoubleSlash Comment
-hi link httpCommentLineKeyword Type
-hi link httpCommentLineName Special
-hi link httpCommentLineNote Special
+hi link httpCommentLineLabel Function
+hi link httpCommentLineKeyword Function
+hi link httpCommentLineString Type
 hi link httpRequestKeyword Keyword
-hi link httpRequestConst Constant
-hi link httpResponseConst Constant
+hi link httpRequestLanguage Identifier
+hi link httpResponseNumber Number
 hi link httpResponseString String
 hi link httpProtocol Keyword
-hi link httpVersion Constant
+hi link httpVersion Number
+hi link httpUrl Underlined
 
 let b:current_syntax = 'http'
 
