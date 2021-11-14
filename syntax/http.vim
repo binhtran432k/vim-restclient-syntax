@@ -21,11 +21,11 @@ syn case match
 " (( Request Line ))
 
 syn match httpRequestKeyword '\c^\(get\|post\|put\|delete\|patch\|head\|options\|connect\|trace\)' nextgroup=httpRequestLanguage contained
-syn match httpRequestLanguage '.\{-1,}$' contains=httpUrl contained
-syn match httpRequestLanguage '.\{-1,}\s\+HTTP/\S\+$' contains=httpUrl,httpProtocolVersion contained
+syn match httpRequestLanguage '.\{-1,}$' contains=httpUrl,httpEndProtocolVersion contained
+syn match httpEndProtocolVersion '\s\+HTTP/\S\+$' contains=httpProtocolVersion contained
 syn match httpRequestLine '\c^\(.\{-1,}\)\%(\s\+\(HTTP/\S\+\)\)\?$' contains=httpRequestLanguage
 syn match httpRequestLine '\c^\%(\(get\|post\|put\|delete\|patch\|head\|options\|connect\|trace\)\s\+\)\(.\{-1,}\)\%(\s\+\(HTTP/\S\+\)\)\?$' contains=httpRequestKeyword
-syn match httpUrl '\(https\?\|ftp\)://\_S\+' contained display
+syn match httpUrl '\<\(https\?\|ftp\)://\_S\+' contained display
 
 " (( Response Line ))
 
@@ -89,7 +89,7 @@ hi link httpQueryKeyword Keyword
 hi link httpQueryVariable Identifier
 hi link httpQueryString String
 hi link httpHeaderEntity Special
-hi link httpHeaderKeyword Delimiter
+hi link httpHeaderKeyword Keyword
 hi link httpHeaderString String
 hi link httpCommentLineSharp Comment
 hi link httpCommentLineDoubleSlash Comment
