@@ -94,15 +94,15 @@ syn match httpCommentLineKeyword '@' contained
 syn match httpCommentLineSharp '^\s*#\{1,}.*$' display contains=httpCommentLineLabel
 syn match httpCommentLineDoubleSlash '^\s*/\{2,}.*$' display contains=httpCommentLineLabel
 
-hi link httpKeyword TSKeyword
+hi link httpKeyword Keyword
 hi link httpIdentifier Identifier
-hi link httpString TSString
+hi link httpString String
 hi link httpSpecial Special
-hi link httpComment TSComment
+hi link httpComment Comment
 hi link httpNormal Normal
-hi link httpFunction TSMethod
-hi link httpType TSType
-hi link httpNumber TSNumber
+hi link httpFunction Function
+hi link httpType Type
+hi link httpNumber Number
 
 hi link httpFileKeyword httpKeyword
 hi link httpFileVariable httpIdentifier
